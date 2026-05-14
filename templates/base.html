@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}城市災害應變與物資調度平台{% endblock %}</title>
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+</head>
+<body>
+<nav class="site-nav">
+    <a href="{% url 'home' %}">首頁</a>
+    <a href="{% url 'incident_search' %}">事件查詢</a>
+    <a href="{% url 'guide' %}">應變指引</a>
+    <a href="{% url 'responders' %}">人員名冊</a>
+    <a href="{% url 'stats' %}">統計頁</a>
+    <a href="{% url 'incident_new' %}">新增事件</a>
+    <a href="/admin/">Admin 入口</a>
+</nav>
+<main class="site-main">
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>

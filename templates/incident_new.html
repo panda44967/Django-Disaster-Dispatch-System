@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}新增事件{% endblock %}
+
+{% block content %}
+<h1>新增 Incident</h1>
+<form method="post" action="{% url 'incident_new' %}" class="crud-form">
+    {% csrf_token %}
+    <table>{{ form.as_table }}</table>
+    <button type="submit">建立</button>
+</form>
+{% endblock %}

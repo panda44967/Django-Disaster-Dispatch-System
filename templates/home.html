@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load operations_extras %}
+
+{% block title %}災害應變首頁 — rescue_center{% endblock %}
+
+{% block content %}
+<h1>{% page_heading "災害應變首頁" "Incident 列表" %}</h1>
+<p><a href="{% url 'incident_search' %}">前往事件查詢</a></p>
+<ul class="incident-list">
+    {% for incident in incidents %}
+        <li class="incident-card {% if incident.is_active %}state-active{% else %}state-closed{% endif %}">
+            <div class="incident-card__head">
+                <span class="badge-id">#{{ incident.pk }}</span>
+                <strong>{{ incident.title }}</strong>
+            </div>
+            <div>分類：{{ incident.category }}｜優先：{{ incident.priority }}｜地點：{{ incident.location }}</div>
+            <div>通報者：{{ incident.reporter.username }}｜狀態：{{ incident.is_active|active_label }}</div>
+            <div>建立時間：{{ incident.created_at }}</div>
+            <p><a href="{{ incident.get_absolute_url }}">進入詳細頁</a></p>
+        </li>
+    {% empty %}
+        <li class="empty-hint">目前尚無事件資料，請至 Admin 或使用示範指令建立。</li>
+    {% endfor %}
+</ul>
+{% endblock %}

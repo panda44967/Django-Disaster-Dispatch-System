@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}人員名冊{% endblock %}
+
+{% block content %}
+<h1>應變人員名冊（一般使用者）</h1>
+<p>一般使用者總數：{{ user_count }}</p>
+<table class="responders-table">
+    <thead>
+        <tr>
+            <th>username</th>
+            <th>email</th>
+            <th>角色概念</th>
+            <th>是否 staff</th>
+            <th>是否 superuser</th>
+            <th>date joined</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in users %}
+            <tr>
+                <td>{{ u.username }}</td>
+                <td>{{ u.email }}</td>
+                <td>
+                    {% if u.responder_profile %}
+                        {{ u.responder_profile.get_role_display }}
+                    {% else %}
+                        （未設定）
+                    {% endif %}
+                </td>
+                <td>{{ u.is_staff }}</td>
+                <td>{{ u.is_superuser }}</td>
+                <td>{{ u.date_joined }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="6">尚無一般使用者，請先執行 seed_users。</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

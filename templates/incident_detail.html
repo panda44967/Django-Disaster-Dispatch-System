@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}{{ incident.title }}{% endblock %}
+
+{% block content %}
+<article class="incident-detail">
+    <h1>{{ incident.title }}</h1>
+    <p>分類：{{ incident.category }}｜優先：{{ incident.priority }}｜地點：{{ incident.location }}</p>
+    <p>通報者：{{ incident.reporter.username }}</p>
+    <p>處理狀態：{% if incident.is_active %}處理中{% else %}已結案{% endif %}</p>
+    <p>建立時間：{{ incident.created_at }}</p>
+    <div class="description">{{ incident.description|linebreaks }}</div>
+    <p>
+        <a href="{% url 'incident_edit' incident.pk %}">修改事件</a>
+        ｜
+        <a href="{% url 'incident_delete' incident.pk %}">刪除事件</a>
+    </p>
+</article>
+
+<section class="nested-requests">
+    <h2>物資需求（ResourceRequest）</h2>
+    <ul>
+        {% for rr in incident.resource_requests.all %}
+            <li class="resource-line {% if rr.is_urgent %}urgent{% endif %}">
+                {{ rr.item_name }} × {{ rr.quantity }}｜狀態：{{ rr.status }}｜
+                緊急：{% if rr.is_urgent %}是{% else %}否{% endif %}｜
+                提出者：{{ rr.requested_by.username }}
+            </li>
+        {% empty %}
+            <li>尚無物資需求。</li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section class="nested-logs">
+    <h2>處置紀錄（ActionLog）</h2>
+    <ul>
+        {% for log in incident.action_logs.all %}
+            <li>
+                {{ log.actor.username }} @ {{ log.created_at }}：
+                {{ log.note|linebreaksbr }}
+            </li>
+        {% empty %}
+            <li>尚無處置紀錄。</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

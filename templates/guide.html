@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}應變指引{% endblock %}
+
+{% block content %}
+<h1>應變指引</h1>
+<p>系統時間參考：{% now "DATETIME_FORMAT" %}</p>
+
+{% comment %}
+巢狀指引資料由 GuideView.get_context_data() 提供，不在此硬寫事件或使用者資料。
+{% endcomment %}
+
+{% for plan in response_plans %}
+    <section class="guide-plan">
+        <h2>{{ plan.title|title }}（階段數：{{ plan.phases|length }}）</h2>
+        {% for phase in plan.phases %}
+            <article class="guide-phase">
+                <h3>
+                    {% if forloop.first %}【優先】{% endif %}
+                    階段 {{ forloop.counter }}：{{ phase.name }}
+                    {% if forloop.last %}（最末階段）{% endif %}
+                </h3>
+                <ul>
+                    {% for check in phase.checks %}
+                        <li>{{ check.text|title }}</li>
+                    {% empty %}
+                        <li>此階段尚無檢查項目。</li>
+                    {% endfor %}
+                </ul>
+            </article>
+        {% empty %}
+            <p>此分類尚無階段資料。</p>
+        {% endfor %}
+    </section>
+{% empty %}
+    <p>尚無指引資料。</p>
+{% endfor %}
+{% endblock %}

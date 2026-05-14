@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}修改事件{% endblock %}
+
+{% block content %}
+<h1>修改 Incident</h1>
+<p>標題（凍結）：<strong>{{ incident.title }}</strong></p>
+<form method="post" action="{% url 'incident_edit' incident.pk %}" class="crud-form">
+    {% csrf_token %}
+    <table>{{ form.as_table }}</table>
+    <button type="submit">儲存</button>
+</form>
+{% endblock %}

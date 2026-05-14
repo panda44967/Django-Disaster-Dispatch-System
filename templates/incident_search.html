@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load operations_extras %}
+
+{% block title %}事件查詢{% endblock %}
+
+{% block content %}
+<h1>事件查詢與篩選</h1>
+
+<form method="get" action="{% url 'incident_search' %}" class="search-form">
+    <div class="search-grid">
+        <label>關鍵字 (q)
+            <input type="text" name="q" value="{{ search.q|default:'' }}">
+        </label>
+        <label>分類 (category)
+            <select name="category">
+                <option value="">全部</option>
+                {% for c in category_choices %}
+                    <option value="{{ c }}" {% if search.category == c %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>優先等級 (priority)
+            <select name="priority">
+                <option value="">全部</option>
+                {% for p in "12345"|make_list %}
+                    <option value="{{ p }}" {% if search.priority == p %}selected{% endif %}>{{ p }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>是否處理中 (is_active)
+            <select name="is_active">
+                <option value="">全部</option>
+                <option value="true" {% if search.is_active == 'true' %}selected{% endif %}>處理中</option>
+                <option value="false" {% if search.is_active == 'false' %}selected{% endif %}>已結案</option>
+            </select>
+        </label>
+        <label>通報者 (reporter：User id 或 username)
+            <input type="text" name="reporter" value="{{ search.reporter|default:'' }}" placeholder="例如 medical_01 或 3">
+        </label>
+        <label>物資狀態 (rr_status)
+            <select name="rr_status">
+                <option value="">不限</option>
+                {% for s in rr_status_choices %}
+                    <option value="{{ s }}" {% if search.rr_status == s %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>僅限緊急物資 (rr_urgent)
+            <select name="rr_urgent">
+                <option value="">不限</option>
+                <option value="true" {% if search.rr_urgent == 'true' %}selected{% endif %}>是</option>
+            </select>
+        </label>
+        <label>處置紀錄關鍵字 (log_note)
+            <input type="text" name="log_note" value="{{ search.log_note|default:'' }}">
+        </label>
+    </div>
+    <button type="submit">查詢</button>
+</form>
+
+<p>查詢結果總筆數：{{ incidents|length }}（目前條件已套用至資料庫查詢）</p>
+
+<ul class="search-results">
+    {% for incident in incidents %}
+        <li class="{% if incident.is_active %}state-active{% else %}state-closed{% endif %}">
+            <strong>{{ incident.title }}</strong> —
+            分類 {{ incident.category }}／優先 {{ incident.priority }}／地點 {{ incident.location }}／
+            通報者 {{ incident.reporter.username }}／{{ incident.is_active|active_label }}
+            <a href="{{ incident.get_absolute_url }}">詳細</a>
+        </li>
+    {% empty %}
+        <li class="empty-hint">查無符合條件的資料。</li>
+    {% endfor %}
+</ul>
+{% endblock %}

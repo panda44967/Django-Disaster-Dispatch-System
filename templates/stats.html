@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}統計頁{% endblock %}
+
+{% block content %}
+<h1>平台統計</h1>
+<ul class="stats-summary">
+    <li>Incident 總數：{{ total_incidents }}</li>
+    <li>處理中（Active）Incident：{{ active_incidents }}</li>
+    <li>已結案（Closed）Incident：{{ closed_incidents }}</li>
+    <li>ResourceRequest 總數：{{ total_resource_requests }}</li>
+    <li>緊急物資需求（Urgent）數：{{ urgent_resource_requests }}</li>
+    <li>ActionLog 總數：{{ total_action_logs }}</li>
+    <li>一般使用者總數：{{ general_user_count }}</li>
+</ul>
+
+<h2>各事件物資與處置筆數</h2>
+<table class="stats-table">
+    <thead>
+        <tr>
+            <th>Incident ID</th>
+            <th>標題</th>
+            <th>物資需求數</th>
+            <th>處置紀錄數</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in per_incident %}
+            <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.title }}</td>
+                <td>{{ row.rr_count }}</td>
+                <td>{{ row.log_count }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="4">尚無事件資料。</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

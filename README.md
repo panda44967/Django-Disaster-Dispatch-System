@@ -45,7 +45,7 @@ python manage.py seed_demo_data
 
 正式作答流程仍建議：先 `seed_users`，再於 **Django Admin** 手動建立事件與關聯資料。
 
-## Migration 流程紀錄（依考題要求）
+## Migration 流程紀錄
 
 已執行：
 
